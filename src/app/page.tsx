@@ -1,103 +1,151 @@
-import Image from "next/image";
+import Link from "next/link";
+import NavBar from "../components/Navbar/page";
 
-export default function Home() {
+export const revalidate = 0;
+
+interface Blog {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  imageUrl: string | null;
+  createdAt: string;
+}
+
+interface BlogsResponse {
+  data: Blog[];
+  meta: {
+    page: number;
+    pageSize: number;
+    totalPages: number;
+    total: number;
+  };
+}
+
+interface HomePageProps {
+  searchParams?: { q?: string; page?: string };
+}
+
+async function fetchBlogs(page = 1, pageSize = 10): Promise<BlogsResponse> {
+  const res = await fetch(
+    `http://localhost:3000/api/blogs?page=${page}&pageSize=${pageSize}`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  if (!res.ok) throw new Error("Failed to fetch blogs");
+  return res.json();
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const search = searchParams?.q || "";
+  const page = parseInt(searchParams?.page || "1", 10);
+  const pageSize = 6;
+
+  const { data: blogs, meta } = await fetchBlogs(page, pageSize);
+
+  const filteredData = blogs.filter((each) =>
+    each.title.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const totalPages = meta?.totalPages || 1;
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
+      <NavBar />
+      <div className="container">
+        <h1 className="page-title">Blogs</h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        {filteredData.length === 0 ? (
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "50px",
+              fontSize: "18px",
+              color: "#555",
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+            No blogs found for your search.
+          </div>
+        ) : (
+          <>
+            <ul className="grid">
+              {filteredData.map((blog) => {
+                const noImgBlog = blog.imageUrl === null;
+                const createdDate = new Date(blog.createdAt);
+                const formattedDate = `${createdDate.getDate()}/${
+                  createdDate.getMonth() + 1
+                }/${createdDate.getFullYear()}`;
+                const formattedTime = `${(createdDate.getHours() % 12 || 12)
+                  .toString()
+                  .padStart(2, "0")}:${createdDate
+                  .getMinutes()
+                  .toString()
+                  .padStart(2, "0")} ${
+                  createdDate.getHours() >= 12 ? "PM" : "AM"
+                }`;
+
+                return (
+                  <li
+                    key={blog.id}
+                    className={`card ${noImgBlog ? "noImgCard" : ""}`}
+                  >
+                    <Link
+                      href={`/blogs/${blog.slug}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      {blog.imageUrl && (
+                        <img
+                          src={blog.imageUrl}
+                          alt={blog.title}
+                          className="card-img"
+                        />
+                      )}
+                      <h2 className="card-title">{blog.title}</h2>
+                      <p className="card-desc">{blog.description}</p>
+                      <p className="published-date">
+                        Published: {formattedDate} • {formattedTime}
+                      </p>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+
+            {/* Pagination Controls */}
+            <div className="pagination-container">
+              {page > 1 && (
+                <Link
+                  href={`/?page=${page - 1}${search ? `&q=${search}` : ""}`}
+                  className="btn btn-outline-primary"
+                >
+                  Previous
+                </Link>
+              )}
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                <Link
+                  key={p}
+                  href={`/?page=${p}${search ? `&q=${search}` : ""}`}
+                  className={`btn ${p === page ? "btn-primary" : "btn-outline-primary"}`}
+                >
+                  {p}
+                </Link>
+              ))}
+
+              {page < totalPages && (
+                <Link
+                  href={`/?page=${page + 1}${search ? `&q=${search}` : ""}`}
+                  className="btn btn-outline-primary"
+                >
+                  Next
+                </Link>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 }

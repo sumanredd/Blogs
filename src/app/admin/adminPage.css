@@ -1,0 +1,48 @@
+.adminContainer {
+  min-height: 100vh; 
+  padding-top: 0;    
+  padding-bottom: 0;
+}
+
+.adminCard {
+  padding: 20px;
+  background-color: #1e1e2f;
+  color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  width: 500px;
+}
+
+.adminTitle {
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.adminLabel {
+  font-weight: 500;
+}
+
+.adminInput {
+  background-color: #2a2a3d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 10px;
+  transition: all 0.2s;
+}
+
+.adminInput:focus {
+  background-color: #3a3a5a;
+  color: white;
+  outline: none;
+  box-shadow: 0 0 5px rgba(255,255,255,0.5);
+}
+
+.adminImg {
+  max-width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.card:hover {
+  transform: none;
+}
