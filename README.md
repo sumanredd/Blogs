@@ -1,4 +1,4 @@
-# My Blog App
+# Sumanredd_WebDev_Assignment
 
 ## Project Overview
 This is a full-stack **Next.js 13** blog application featuring server-side rendering (SSR), API routes, and an admin interface to create, manage, and delete blog posts. The app supports pagination, search, and image uploads. Blogs are stored in a **Prisma-managed database** (PostgreSQL or MongoDB).
