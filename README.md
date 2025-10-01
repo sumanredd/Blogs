@@ -24,13 +24,12 @@ https://github.com/sumanredd/Blogs
 - **Prisma ORM**
 - **PostgreSQL / MongoDB**
 - **Bootstrap 5**
-- **Optional:** Material-UI for pagination or components
 
 ---
 
 ## Setup Instructions
 
-### 1. Clone the repository
+### Clone the repository
 ```bash
 git clone https://github.com/your-username/my-blog.git
 cd my-blog
@@ -57,9 +56,15 @@ Ensure that the DATABASE_URL points to a live PostgreSQL or MongoDB instance.
 
 ## Migrate the database
 ```bash
+# Step 1: Run the migration
 npx prisma migrate dev
 
 This will create the necessary tables for blogs.
+
+# Step 2: Generate the Prisma client
+npx prisma generate
+
+generate creates the @prisma/client library with the updated types, so the app can query the database properly.
 ```
 ## Run the development server
 ```bash
