@@ -28,7 +28,7 @@ interface HomePageProps {
 
 async function fetchBlogs(page = 1, pageSize = 10): Promise<BlogsResponse> {
   const res = await fetch(
-    `http://localhost:3000/api/blogs?page=${page}&pageSize=${pageSize}`,
+    `/api/blogs?page=${page}&pageSize=${pageSize}`,
     {
       cache: "no-store",
     }
@@ -113,7 +113,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               })}
             </ul>
 
-            {/* Pagination Controls */}
+          
             <div className="pagination-container">
               {page > 1 && (
                 <Link
