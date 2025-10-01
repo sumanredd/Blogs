@@ -9,7 +9,6 @@ This is a full-stack **Next.js 13** blog application featuring server-side rende
 - Search blogs by title.
 - Pagination for blog listings.
 - Admin page to create, edit, and delete blogs.
-- Rich text support (Markdown editor optional).
 - Image support for each blog post.
 
 ---
@@ -36,7 +35,7 @@ https://github.com/sumanredd/Blogs
 git clone https://github.com/your-username/my-blog.git
 cd my-blog
 ## Install dependencies
-```bash
+
 
 npm install
 
@@ -49,7 +48,7 @@ yarn install
 ```bash
 Create a .env file at the root of the project with the following variables:
 
-env
+.env
 
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/blogdb"
 Password is **postgres**
