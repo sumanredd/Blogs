@@ -50,8 +50,8 @@ Create a .env file at the root of the project with the following variables:
 .env
 
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/blogdb"
-Password is **postgres**
-Ensure that the DATABASE_URL points to a live PostgreSQL or MongoDB instance.
+Note: Password is postgres (change if using a different password).
+Ensure the URL points to your live PostgreSQL or MongoDB instance.
 ```
 
 ## Migrate the database
@@ -59,12 +59,12 @@ Ensure that the DATABASE_URL points to a live PostgreSQL or MongoDB instance.
 # Step 1: Run the migration
 npx prisma migrate dev
 
-This will create the necessary tables for blogs.
+migrate dev applies your Prisma schema to the database.
 
 # Step 2: Generate the Prisma client
 npx prisma generate
 
-generate creates the @prisma/client library with the updated types, so the app can query the database properly.
+generate updates @prisma/client with the latest schema for queries.
 ```
 ## Run the development server
 ```bash
