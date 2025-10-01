@@ -14,8 +14,8 @@ This is a full-stack **Next.js 13** blog application featuring server-side rende
 
 ---
 
-## Live Demo
-[Insert your Vercel link here]
+## Github URL
+https://github.com/sumanredd/Blogs
 
 ---
 
